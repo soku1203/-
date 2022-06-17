@@ -47,4 +47,4 @@ repeat
 untile(종료조건 만족될 때 까지)
 return s;
 ```
-
+![untitled2](https://user-images.githubusercontent.com/98035175/174287396-984e1e4a-a21c-47b2-b515-305c0e16fe22.png)
