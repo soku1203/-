@@ -89,9 +89,9 @@ int scoring() { // 현재 상태의 뒤집어져 있는 코인의 개수 return
 	return s;
 }
 
-double t = 1, d = 0.9999, lim = 0.09;
+double t = 1, d = 0.9999,k = 10, lim = 0.09; // t는 온도, d 는 온도의 변화율, lim은 온도의 한계값이다.
 std::mt19937_64 seed(9999);
-std::uniform_real_distribution<double> rng(0, 1);
+std::uniform_real_distribution<double> rng(0, 1); // 0에서 1사이의 랜덤 double 값을 얻는 함수다.
 
 int ret = 999;
 
@@ -139,6 +139,10 @@ int main() {
 	return 0;
 }
 ```
+
+### 구현1에서 최적화 과정
+
+
 ### 알고리즘의 구현2
 
 2021년도 월간 최저 기온에 대하여 모의 담금질 알고리즘을 통해 최고기온을 구해 보았다.
@@ -147,3 +151,54 @@ int main() {
 
 데이터에 대하여 matlab 프로그램을 이용하여 함수를 구하고 데이터에 대한 그래프의 모양을 그려보았다.
 ![월간 최저 기온](https://user-images.githubusercontent.com/98035175/174315740-b550225b-145a-479a-9589-337ff75e5f8a.png)
+
+```c++
+#include <iostream>
+#include <random>
+
+using namespace std;
+double pos;
+double temp() {
+	double newpos = -0.8845 * pow(pos, 2) + 12.2868*pos - 22.3864; // matlab을 통해 구현한 월에 따른 기온 함수를 통해 현재기온을 return
+	return newpos;
+}
+
+double t = 1, d = 0.9999, k = 10, lim = 0.09;
+std::mt19937_64 seed(9999);
+std::uniform_real_distribution<double> rng(0, 1);
+std::uniform_real_distribution<double> rng2(0, 0.1);
+
+double cdouble(double cur)
+{
+	int t = rand() % 2;
+	if (t == 0)
+	{
+		return -cur;
+	}
+	else if (t == 1)
+		return cur;
+}
+double ret = 0;
+void simulated_annealing() {
+	double e1, e2;
+	while (t > lim) {
+		e1 = temp();
+		double delval = rng2(seed);
+		delval = cdouble(delval);
+		pos += delval;
+		e2 = temp();
+		double p = exp((e1 - e2) / (k * t));
+		if (p < rng(seed))
+			pos-= delval;
+		t *= d;
+		ret = max(ret, temp());
+	}
+}
+
+int main() {
+	pos = rand() % 12;
+	simulated_annealing();
+	cout << ret;
+	return 0;
+}
+```
