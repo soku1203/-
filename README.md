@@ -89,7 +89,7 @@ int scoring() { // 현재 상태의 뒤집어져 있는 코인의 개수 return
 	return s;
 }
 
-double t = 1, d = 0.9999,k = 10, lim = 0.09; // t는 온도, d 는 온도의 변화율, lim은 온도의 한계값이다.
+double t = 1, d = 0.9999, k = 10, lim = 0.09; // t는 온도, d 는 온도의 변화율,k는 볼츠만 상수, lim은 온도의 한계값이다.
 std::mt19937_64 seed(9999);
 std::uniform_real_distribution<double> rng(0, 1); // 0에서 1사이의 랜덤 double 값을 얻는 함수다.
 
@@ -113,7 +113,7 @@ void simulated_annealing() {
 		}
 		else
 		{
-			double p = exp((e1 - e2) / t); // 확률함수
+			double p = exp((e1 - e2) / (t*k)); // 확률함수
 			if (p < rng(seed)) // 확률적으로 코인의 상태를 기존으로 돌림
 				for (int i = 0; i < n; i++)
 					for (int j = 0; j < n; j++)
@@ -142,6 +142,12 @@ int main() {
 
 ### 구현1에서 최적화 과정
 
+>Simulated Annealing 을 구현하는 데에 있어서 오류를 최소화하고 최적값을 잘 찾도록 하기 위한 방법은 확률함수를 잘 구현하는 것에 달려있었다. 
+   double p = exp((e1 - e2) / (t*k));
+
+>이처럼 확률 함수는 exponential 함수의 지수를 변화량/온도*볼츠만상수 로 구현이 되어 있는데, 볼츠만 상수가 존재하지 않을 경우 71가지 케이스 중 66가지 케이스를 통과했다.
+
+>온도의 감소 비율 또한 매우 중요한데, 그 이유는 온도가 한계값으로 도달하였을 경우 함수가 종료되도록 구현이 되어 있는데 온도의 감소 비율이 너무 클 경우 충분한 탐색을 하기 전에 함수가 종료되기 때문이다.
 
 ### 알고리즘의 구현2
 
