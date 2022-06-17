@@ -48,7 +48,7 @@ untile(종료조건 만족될 때 까지)
 return s;
 ```
 
-### 알고리즘의 구현
+### 알고리즘의 구현1
 
 [문제](https://www.acmicpc.net/problem/2582)
 nxn 개의 행렬을 이루는 동전에 대하여 초기 상태가 주어진다. H는 앞면 T 는 뒤집어진 모양이고, 한 행 또는 한 열에 놓은 동전을 모두 뒤집는 작업을 수행할 때 뒤집어진 동전의 개수의 최솟값을 구하는 알고리즘을 구현했다.
@@ -139,5 +139,11 @@ int main() {
 	return 0;
 }
 ```
+### 알고리즘의 구현2
 
-![untitled2](https://user-images.githubusercontent.com/98035175/174287396-984e1e4a-a21c-47b2-b515-305c0e16fe22.png)
+2021년도 월간 최저 기온에 대하여 모의 담금질 알고리즘을 통해 최고기온을 구해 보았다.
+[날씨 데이터 출처](https://data.kma.go.kr/data/rmt/rmtList.do?code=420&pgmNo=572)
+
+
+데이터에 대하여 matlab 프로그램을 이용하여 함수를 구하고 데이터에 대한 그래프의 모양을 그려보았다.
+![월간 최저 기온](https://user-images.githubusercontent.com/98035175/174315740-b550225b-145a-479a-9589-337ff75e5f8a.png)
