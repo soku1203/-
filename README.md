@@ -164,7 +164,7 @@ int main() {
 
 using namespace std;
 double pos;
-double temp() {
+double temp() { //현재 위치에 따른 온도 return
 	double newpos = -0.8845 * pow(pos, 2) + 12.2868*pos - 22.3864; // matlab을 통해 구현한 월에 따른 기온 함수를 통해 현재기온을 return
 	return newpos;
 }
@@ -172,9 +172,9 @@ double temp() {
 double t = 1, d = 0.9999, k = 10, lim = 0.09;
 std::mt19937_64 seed(9999);
 std::uniform_real_distribution<double> rng(0, 1);
-std::uniform_real_distribution<double> rng2(0, 0.1);
+std::uniform_real_distribution<double> rng2(0, 0.1); //이웃해
 
-double cdouble(double cur)
+double cdouble(double cur) // 주어진 double 값에 대하여 랜덤하게 - or + 를 결정
 {
 	int t = rand() % 2;
 	if (t == 0)
@@ -185,7 +185,7 @@ double cdouble(double cur)
 		return cur;
 }
 double ret = 0;
-void simulated_annealing() {
+void simulated_annealing() { // 온도가 한계값에 도달하기 전까지 최적해 탐색
 	double e1, e2;
 	while (t > lim) {
 		e1 = temp();
@@ -202,8 +202,8 @@ void simulated_annealing() {
 }
 
 int main() {
-	pos = rand() % 12;
-	simulated_annealing();
+	pos = rand() % 12; // 12월 중 랜덤한 초기값 부여
+	simulated_annealing(); 
 	cout << ret;
 	return 0;
 }
