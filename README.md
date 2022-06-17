@@ -47,4 +47,97 @@ repeat
 untile(종료조건 만족될 때 까지)
 return s;
 ```
+
+### 알고리즘의 구현
+
+[문제](https://www.acmicpc.net/problem/2582)
+nxn 개의 행렬을 이루는 동전에 대하여 초기 상태가 주어진다. H는 앞면 T 는 뒤집어진 모양이고, 한 행 또는 한 열에 놓은 동전을 모두 뒤집는 작업을 수행할 때 뒤집어진 동전의 개수의 최솟값을 구하는 알고리즘을 구현했다.
+
+```c++
+#include <bits/stdc++.h>
+#include <random>
+
+using namespace std;
+int n;
+int coin[40][40]; // coin 의 상태
+
+void turn(int x, int y) { // 코인을 뒤집는 함수
+	if (y == 0) {
+		for (int i = 0; i < n; i++)
+			coin[x][i] = 1 - coin[x][i];
+	}
+	else {
+		for (int i = 0; i < n; i++)
+			coin[i][x] = 1 - coin[i][x];
+	}
+}
+
+void func() { 
+	for (int i = 0; i < n; i++) {
+		int s = 0;
+		for (int j = 0; j < n; j++)
+			s += coin[j][i];
+		if (s > (n / 2)) turn(i, 1);
+	}
+}
+
+int scoring() { // 현재 상태의 뒤집어져 있는 코인의 개수 return
+	int s = 0;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			s += coin[i][j];
+	return s;
+}
+
+double t = 1, d = 0.9999, lim = 0.09;
+std::mt19937_64 seed(9999);
+std::uniform_real_distribution<double> rng(0, 1);
+
+int ret = 999;
+
+void simulated_annealing() {
+	double e1, e2;
+	int ori[40][40];
+	while (t > lim) {
+		e1 = scoring();
+		for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++) 
+                ori[i][j] = coin[i][j];// 이동전 값을 저장
+		int pos = rand() % n; // n 미만의 랜덤값을 pos 에 지정
+		turn(pos, 0); // 랜덤 pos 뒤집기
+		func();
+		e2 = scoring(); // 뒤집은 후 뒤집에져 있는 코인의 개수 e2에 저장
+		if (e1 > e2)
+		{
+			ret = min(ret, (int)e2);
+		}
+		else
+		{
+			double p = exp((e1 - e2) / t); // 확률함수
+			if (p < rng(seed)) // 확률적으로 코인의 상태를 기존으로 돌림
+				for (int i = 0; i < n; i++)
+					for (int j = 0; j < n; j++)
+						coin[i][j] = ori[i][j];
+		}
+		t *= d;// 온도가 낮아짐
+		if (ret == 0)
+			break;
+	}
+}
+
+int main() {
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			char ch;
+			scanf(" %c", &ch);
+			coin[i][j] = (ch == 'H' ? 0 : 1); // 코인의 초기 상태 입력
+		}
+	}
+	simulated_annealing();
+	printf("%d", ret); // 모의 담금질 후 구한 최솟값을 출력
+	return 0;
+}
+```
+
 ![untitled2](https://user-images.githubusercontent.com/98035175/174287396-984e1e4a-a21c-47b2-b515-305c0e16fe22.png)
